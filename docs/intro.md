@@ -82,7 +82,7 @@ Create `HelloController.ts` at **/src/modules/hello/** with same-named static cl
 // /src/modules/hello/HelloController.ts
 import { get, prefix } from "vovk";
 
-@prefix('hello')
+@prefix('hello') // prefix is optional
 export default class HelloController {
     @get('greeting')
     static getHello() {
@@ -102,11 +102,11 @@ const controllers = { HelloController };
 // ...
 ```
 
-You can freely use named export for the controller if needed.
+The code above creates GET endpoint to `/api/hello/greeting`. You can also use named export for the controller if needed.
 
 ## Create a React component and run `vovk dev`
 
-Once you run `npx vovk dev` that replaces the original `npx next dev` you're going to notice the new file **.vovk.json** created in the root of your project. This file contains required information to build the client and needs to be committed. It's going to be updated automatically when your project structure is changed.
+Once you run `npx vovk dev` that replaces the original `npx next dev` you're going to notice the new file **.vovk.json** created in the root of your project. This file contains required information to build the client and it needs to be committed. It's going to be updated automatically when your project structure is changed.
 
 Besides **.vovk.json** the command also generates client **.js** and **.ts** files inside **node_modules/.vovk** that are re-exported by **vovk-client** module to produce no errors if **vovk-client** is not installed. This approach is borrowed from Prisma ORM.
 
@@ -139,11 +139,11 @@ export default function MyComponent() {
 
 Note that if you're using VSCode you're probably going to need to [restart TS server](https://stackoverflow.com/questions/64454845/where-is-vscodes-restart-ts-server) each time when you add a new controller or worker service to your app because by the time being TS Server doesn't update types imported from **node_modules** automatically when they were changed. This is a well-known problem that bothers Prisma ORM developers for long time. In all other scenarios (when you add a new method, change body type, etc) you don't need to do that since TS server reads `Controllers` and `Workers` that you export from **/src/app/api/[[...vovk]]/route.ts**.
 
-Note that Next.js Server Components are also supported but require to define absolute URL (by default all requests are made to `/api`). Check the !!!!Server Component example for more information.
+Note that Next.js Server Components are also supported but require to define absolute URL (by default all requests are made to `/api`). Check the [Server Component Example](https://vovk-examples.vercel.app/server-component) for more information.
 
 ## Build and deploy
 
-Use the regular `npx next build` to build the project. If the client wasn't generated in **node_modules/.vovk** before you going to get compilation errors if **vovk-client** was imported somewhere in the app. To re-generate client with existing **.vovk.json** without re-builing the project itself you need to run `npx vovk generate` that updates **node_modules/.vovk** folder on deployment or after you've reinstalled your **node_modules**. 
+Use the regular `npx next build` to build the project. If the client wasn't generated in **node_modules/.vovk** before, you going to get compilation errors if **vovk-client** was imported somewhere in the app. To re-generate client with existing **.vovk.json** without re-builing the project itself you need to run `npx vovk generate` that updates **node_modules/.vovk** folder on deployment or after you've reinstalled your **node_modules**. 
 
 To easily build the project on Vercel you can create `"vercel-build"` npm script at **package.json** that is going to generate client before build.
 
@@ -155,4 +155,4 @@ To easily build the project on Vercel you can create `"vercel-build"` npm script
 
 ## Examples 
 
-You can check additional examples [here](https://vovk-examples.vercel.app/).
+You can check more examples [here](https://vovk-examples.vercel.app/).

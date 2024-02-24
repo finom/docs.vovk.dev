@@ -65,15 +65,16 @@ const config = {
       // Replace with your project's social card
       image: 'img/vovk-og.png',
       navbar: {
-        title: 'Vovk.ts',
+        // title: 'Vovk.ts',
         logo: {
-          alt: 'Vovk.ts Logo',
-          src: 'https://github.com/finom/vovk/assets/1082083/86bfbbbb-3600-435b-a74c-c07bd0c4af4b',
+          alt: 'Vovk.ts',
+          className: 'invert',
+          style: { height: '20px', marginTop: '5px' },
+          src: '/img/vovk-text-logo.svg',
         },
         items: [
           {
-            type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
+            href: '/docs/intro',
             position: 'left',
             label: 'Getting Started',
           },
