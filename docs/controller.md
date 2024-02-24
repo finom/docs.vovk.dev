@@ -2,11 +2,11 @@
 sidebar_position: 1
 ---
 
-# Controller
+# Controller Class
 
 ## Controller definition
 
-Controller is a static class that handles incoming HTTP requests. The methods of this class that are decorated with HTTP decorator accept 2 arguments: `NextRequest` that is not modified in any way by Vovk.ts and parameters that are defined by decorator path. 
+Controller is a static class that handles incoming HTTP requests. The methods of this class that are decorated with HTTP decorator accept 2 arguments: `NextRequest` that is not modified in any way by Vovk.ts itself and parameters that are defined by the decorator path. 
 
 ```ts
 import type { NextRequest } from 'next';
@@ -17,19 +17,19 @@ export default class UserController {
     // Example request: PUT /api/users/69?role=moderator
     @put(':id') 
     static async updateUser(req: NextRequest, { id }: { id: string }) {
-        const data = await req.json();
-        const userRole = req.nextUrl.searchParams.get('role');
+        const data = await req.json(); // any
+        const userRole = req.nextUrl.searchParams.get('role'); // string | null
         // ...
         return updatedUser;
     }
 }
 ```
 
-At the example aboce `data` is casted as `any` and `userRole` is casted as `string | null`. To fix the types Vovk.ts provides a new type `VovkRequest<BODY?, QUERY?>` that is extended from `NextRequest` where the first generic argument represents the type of value returned from `req.json` but also allows to define values returned from `req.nextUrl.searchParams.get`. `VovkRequest` also plays an important role in type inference in generting client library, exported from **vovk-client**. 
+At the example aboce `data` is casted as `any` and `userRole` is casted as `string | null`. To fix the body and query types Vovk.ts provides a new type `VovkRequest<BODY?, QUERY?>` that is extended from `NextRequest` where the first generic argument represents the type of value returned from `req.json` but also allows to define values returned from `req.nextUrl.searchParams.get`. `VovkRequest` also plays a crucial role in type inference when **vovk-client** is used. 
 
-As its mentioned before, `req` object is an original `NextRequest` object that provided by Next.js as is without changing it, but third-party libraries (like **vovk-zod**) as well as your custom code can modify this object when required (for example to add `currentUser` property defined by your auth guard).
+As its mentioned before, `req` object is an original `NextRequest` object that provided by Next.js as is without changing it, but other libraries (like [vovk-zod](https://github.com/finom/vovk-zod)) as well as your custom code can modify this object when needed (for example to add `currentUser` property defined by your [auth guard decorator](http://localhost:3000/docs/decorators)).
 
-To add the required types just replace `NextRequest` by `VovkRequest`. Let's modify the abstract example above.
+To add the required body and query types just replace `NextRequest` by `VovkRequest`. Let's modify the abstract example above.
 
 ```ts
 // /src/modules/user/UserController.ts
@@ -44,8 +44,8 @@ export default class UserController {
         req: VovkRequest<Partial<User>, 'user' | 'moderator' | 'admin'>, 
         { id }: { id: string }
     ) {
-        const data = await req.json();
-        const userRole = req.nextUrl.searchParams.get('role');
+        const data = await req.json(); // Partial<User>
+        const userRole = req.nextUrl.searchParams.get('role'); // 'user' | 'moderator' | 'admin'
         // ...
         return updatedUser;
     }
@@ -56,7 +56,7 @@ As you can see we've changed nothing more than the type of `req` but now `data` 
 
 ## Client library
 
-Once controller is defined it needs to be initialized at the wildcard route explained in the [Inroduction](./intro).
+Once controller is defined it needs to be initialized at the wildcard route by adding it to the `controllers` object.
 
 ```ts
 // /src/app/api/[[...vovk]]/route.ts
@@ -72,11 +72,11 @@ export type Workers = typeof workers;
 export const { GET, POST, PUT, DELETE } = initVovk({ controllers, workers });
 ```
 
-`initVovk` performs required actions to generate client-side library and no additional action from your side is required (but you probably would need to restart TS Server to update types if you use VSCode).
+`initVovk` performs required actions to generate client-side library and no additional action from your side is required (but you probably would need to restart TS Server to update types if you use VSCode when a new controller is added).
 
-The client library implements the same methods (in our case `updateUser`) but changes the method interface so you can pass required input data as options (`body`, `query` and `params`). **vovk-client** can be used in client components, server components, application state and even be distributed as a standalone package. For an illustration [vovk-examples](https://github.com/finom/vovk-examples) is published as a [standalone NPM package](https://www.npmjs.com/package/vovk-examples) to be used on [vovk.dev](https://vovk.dev) that by itself is a static website powered by gh-pages.
+The client library implements the same methods (in our case `updateUser`) but changes the method interface so you can pass required input data as options (`body`, `query` and `params`). **vovk-client** can be used in client components, server components, application state and even be distributed as a standalone package. For an illustration [vovk-examples](https://github.com/finom/vovk-examples) is published as a [standalone NPM package](https://www.npmjs.com/package/vovk-examples) to be used on [vovk.dev](https://vovk.dev) that, by itself, is a static website powered by gh-pages.
 
-Note that everything exported from **vovk-client** is plain old JavaScript with TS typings that calls regular `fetch` function. Vovk.ts does not use `Proxy` object that author of this library considers as cheating.
+Everything exported from **vovk-client** is plain old JavaScript with typings that calls the regular `fetch` function.
 
 ```ts
 import { UserController } from 'vovk-client';
@@ -88,9 +88,15 @@ const updatedUser = await UserController.updateUser({
     query: { role: 'admin' },
     params: { id: '69' },
 });
+
+// same as
+fetch('/api/users/69?role=admin', {
+    method: 'PUT',
+    body: JSON.stringify({ firstName, lastName }),
+});
 ```
 
-It's worthy to mention that client library can be !!!!!customised in order to follow custom logic required by the application.
+It's worthy to mention that client library [can be customised](./customization) in order to follow custom logic required by the application.
 
 ```ts
  await UserController.updateUser({
@@ -120,7 +126,7 @@ static async updateUser(/* ... */) {
 // ...
 ```
 
-At this case the returned value of client method `UserController.updateUser` is going to be casted as `User` generated at **@prisma/client**.
+At this case the returned value of client method `UserController.updateUser` is going to be recognised as `User` generated at **@prisma/client**.
 
 ### Response object
 
@@ -135,7 +141,7 @@ static async updateUser(/* ... */) {
 // ...
 ```
 
-At this case client library wouldn't be able to properly recognise type of returned value but you can override the type manually by using generic argument that completely overrides the return type without need to cast it to `unknown`.
+At this case client library wouldn't be able to properly recognise type of returned value but you can override the type manually by using generic argument that overrides the return type without need to convert it to `unknown` first.
 
 ```ts
 import { UserController } from 'vovk-client';
@@ -157,11 +163,11 @@ static async *updateUser(/* ... */) {
 // ...
 ```
 
-If iterable is returned, the client library is going to cast the method also as async iterable to implement response streaming. It's explained in more details below but worthy to mention here.
+If iterable is returned, the client library is going to cast the method as async generator to implement response streaming. It's explained in more details below.
 
 ## Auto-generated endpoints
 
-All HTTP decorators provide `.auto` static method that generates endpoint name automatically from the method name.
+All HTTP decorators provide `.auto` method that generates endpoint name automatically from the method name.
 
 ```ts
 // /src/modules/user/UserController.ts
@@ -212,7 +218,7 @@ export default class UserController {
 
 ## Errors: `HttpException` class and `HttpStatus` enum
 
-You can gracefully throw HTTP exceptions similarly to NestJS approach. `HttpException` accepts 2 arguments. The first one is an HTTP code that can be retrieved from `HttpStatus`, the other one is error text.
+You can gracefully throw HTTP exceptions similarly to NestJS. `HttpException` class accepts 2 arguments. The first one is an HTTP code that can be retrieved from `HttpStatus`, the other one is an error text.
 
 ```ts
 import { HttpException, HttpStatus } from 'vovk';
@@ -260,11 +266,11 @@ throw { hello: 'World' };
 ```
 
 
-## Service
+## Service Class
 
-In order to make the code cleaner it's recommended to move most of the logic to Back-end Services. A Back-end service is a static class that serves as a library that performs database and third-party API calls outside of Controllers.
+In order to make the code cleaner it's recommended to move most of the logic to Back-end Services. [Back-End Service](http://localhost:3000/docs/project-structure) is a static class that serves as a library that performs database and third-party API calls outside of Controller Classes.
 
-Imagine you have the following Controller:
+Let's say you have the following Controller Class:
 
 ```ts
 // /src/modules/user/UserController.ts
@@ -287,17 +293,17 @@ export default class UserController {
 }
 ```
 
-Currently it looks nice since it doesn't contain a lot of logic. But as your app is getting more complex you're going to get more handlers and the handlers themselves are going to become bigger. At this case it's recommended to move part of the logic to Back-end service making controllers to be responsible for input extraction, validation and authorisation.
+Currently it looks fine since it doesn't contain a lot of logic. But as your app is getting more complex you're going to get more handlers with more code. At this case it's recommended to move part of the logic to Back-End Service Class making controllers to be responsible for input extraction, validation and authorisation, but not for DB or API calls.
 
-Let's refactor the class above by introducing `UserService`. For this example it's going to be small but I hope that illustrates the idea clearly.
+Let's refactor the code above by introducing `UserService`. For this example it's going to be small but I hope that illustrates the idea clearly.
 
 ```ts
 // /src/modules/user/UserService.ts
 
-// ... import types and Prisma client ...
+// ... import types and libraries ...
 
 export default class UserService {
-    static async updateUser(id: string, data: Partial<User>) {
+    static updateUser(id: string, data: Partial<User>) {
         return prisma.user.update({
             where: { id },
             data,
@@ -306,9 +312,9 @@ export default class UserService {
 }
 ```
 
-As you can see, `UserService` does not use decorators and served as a library to perform side-effects. By design it shoudln't interact with request object. 
+As you can see, `UserService` does not use decorators and used as a library to perform side-effects.
 
-The newly created service is injected into the controller with `private static` prefix. You can use `UserService` class directly but I find this way of dependency injection as more descriptive.
+The newly created service is injected into the controller with `private static` prefix. You can use `UserService` class directly to call its methods but this way of dependency injection is more descriptive.
 
 ```ts
 // /src/modules/user/UserController.ts
@@ -327,7 +333,7 @@ export default class UserController {
 }
 ```
 
-Back-end Services can inject other Back-end services (as well as Isomorphic Services explained in separate article of this documentation!!!!!).
+Back-End Service Classes can inject other Back-End Services (as well as so-called Isomorphic Service Classes explained in [separate article of this documentation](./project-structure)).
 
 ```ts
 // /src/modules/user/UserService.ts
@@ -348,7 +354,7 @@ export default class UserService {
 }
 ```
 
-In case if two services are dependent on each other in order to avoid errors you can apply a workaround that involves accessor definition. For example if `UserService` is using `PostService` and vice versa, the code of the services might look look like that:
+In case if two services are dependent on each other, in order to avoid errors, you can apply a workaround that involves accessor definition. For example if `UserService` is using `PostService` and vice versa, the code of the services might look like that:
 
 ```ts
 // /src/modules/user/UserService.ts
@@ -376,7 +382,7 @@ export default class UserService {
 import UserService from '../user/UserService';
 // ... other imports ...
 
-export default class UserService {
+export default class PostService {
     private static get userService() {
         return UserService;
     };
@@ -394,11 +400,11 @@ export default class UserService {
 
 ## Streaming
 
-Vovk.ts provides two ways to implement response streaming requred for applications that utilise modern AI completions.
+Vovk.ts provides two ways to implement response streaming requred for applications that utilise the AI completions.
 
 ### Async iterators
 
-Controller methods can implement generators that use `*` prefix and utilise `yield` keyword instead of regular `return`.
+Controller methods can implement generators that use `*` syntax and utilise `yield` keyword instead of regular `return`.
 
 ```ts
 // /src/modules/stream/StreamController.ts
@@ -465,7 +471,7 @@ export default class StreamController {
 
 ### StreamResponse
 
-Sometimes it's too hard to use generators to implement response streaming in some cases. Vovk.ts introduces `StreamResponse` class inherited from `Response` that uses `TransformStream#readable` as body and adds required HTTP headers. It's a lower-level API that is used behind the scenes to implement generator logic explained above. `StreamResponse` is useful when your service method is implemented a regular function that accepts `StreamResponse` instance as a pointer to send messages manually.
+In some cases it's too hard to use generators to implement response streaming. Vovk.ts introduces `StreamResponse` class inherited from `Response` class that uses `TransformStream#readable` as body and adds required HTTP headers. It's a lower-level API that is used behind the scenes to implement generator logic explained above. `StreamResponse` is useful when your service method is implemented a regular function that accepts `StreamResponse` instance as a pointer to send messages manually.
 
 There is what the streaming service might look like:
 
@@ -493,9 +499,9 @@ export default class StreamService {
 }
 ```
 
-As you can see tokens are sent using `StreamResponse#send` method.
+As you can see tokens are sent using `StreamResponse#send` method and, when the stream is completed, it needs to be closed with `StreamResponse#close`.
 
-The controller returns an instance of `StreamResponse` and tokens are streamed in a floating Promise.
+The Controller Class returns an instance of `StreamResponse` and the streaming is performed a floating Promise above the `return` statement.
 
 ```ts
 import { prefix, get, StreamResponse, type VovkRequest } from 'vovk';
@@ -516,7 +522,7 @@ export default class StreamController {
 }
 ```
 
-`StreamResponse` class also provides `close` and `throw` methods. Both close the stream but the second one makes client-side re-throw the received error.
+`StreamResponse` class also provides `throw` methods that safely closes the stream and makes the client to re-throw the received error.
 
 ```ts
 await resp.close();
@@ -556,7 +562,7 @@ import { StreamController } from 'vovk-client';
 
 ## Validation with vovk-zod
 
-**vovk-zod** is the library that implements [Zod](https://zod.dev/) validation. It performs validation on the Controller with `ZodModel.parse`, [converts the Zod object to a JSON Schema](https://www.npmjs.com/package/zod-to-json-schema) that's stored at the metadata file, and runs validation on client before the request is made with [Ajv](https://ajv.js.org/).
+[vovk-zod](https://github.com/finom/vovk-zod) is a library that implements [Zod](https://zod.dev/) validation. It performs validation on the Controller with `ZodModel.parse`, [converts the Zod object to a JSON Schema](https://www.npmjs.com/package/zod-to-json-schema) that's stored at the metadata file, and runs validation with [Ajv](https://ajv.js.org/) on client before the request is made.
 
 ```ts
 // /src/modules/user/UserController.ts
@@ -588,7 +594,7 @@ UserController.updateUser({
 })
 ```
 
-`disableClientValidation` mostly useful for debugging purposes to make sure that server validation is properly functioning. In order to disable client validation completely (for example to hide validation logic from client-side so it doesn't appear in **.vovk.json**) you can set `exposeValidation: false` at `initVovk` function. 
+`disableClientValidation` is mostly useful for debugging purposes to make sure that the server validation is properly functioning. In order to disable client validation completely (for example to hide validation logic from client-side so it doesn't appear in **.vovk.json**) you can set `exposeValidation: false` at `initVovk` function. 
 
 ```ts
 // /src/app/api/[[...vovk]]/route.ts
@@ -603,7 +609,7 @@ export const { GET, POST, PUT, DELETE } = initVovk({
 
 ## Type extraction
 
-Vovk.ts provides a collection of useful types that described in more details at API documentation !!!!!. It's worthy to mention the most often used types shortly here. 
+**vovk** module provides a collection of useful types that described in more details at [API documentation](./api). It's worthy to mention the most often used types here:
 
 ```ts
 import { UserController, StreamController } from 'vovk-client';
@@ -620,7 +626,7 @@ type Return = VovkClientReturnType<typeof UserController.updateUser>;
 type Yield = VovkClientYield<typeof StreamController.streamTokens>;
 ```
 
-For example if you want to create a custom client-side function that makes request to the server, you can borrow types from the client to build arguments.
+For example, if you want to create a custom function that makes requests to the server, you can borrow types from the client to build the arguments.
 
 ```ts
 import { UserController } from 'vovk-client';

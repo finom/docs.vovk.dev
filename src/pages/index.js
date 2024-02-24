@@ -5,21 +5,6 @@ import styles from './index.module.css';
 import { useRef, useEffect } from 'react';
 
 function Content() {
-  // https://github.com/facebook/docusaurus/issues/9629
-  const { colorMode } = useColorMode();
-  // eslint-disable-next-line no-undef
-  const rendersRef = useRef(1);
-
-  useEffect(() => {
-    // eslint-disable-next-line no-undef
-    const localStorageColorMode = localStorage.getItem('theme');
-    if (rendersRef.current === 1 && localStorageColorMode) {
-      // eslint-disable-next-line no-undef, @typescript-eslint/no-unsafe-member-access
-      document.querySelector('.invert').style.filter = localStorageColorMode === 'dark' ? 'invert(1)' : 'none';
-    }
-    rendersRef.current += 1;
-  }, [colorMode]);
-
   return (
     <>
       <p className={styles.main}>
@@ -31,20 +16,20 @@ function Content() {
         />{' '}
         <br />
         <img
-          key={colorMode}
           width="350"
           height="72"
           alt="vovk"
           className="invert"
-          style={colorMode === 'dark' ? { filter: 'invert(1)' } : {}}
-          src="https://github.com/finom/vovk/assets/1082083/e8e4b68d-b713-4562-a55b-407c68215513"
+          // style={colorMode === 'dark' ? { filter: 'invert(1)' } : {}}
+          src='/img/vovk-text-logo.svg'
         />
       </p>
       <p style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
-        Welcome to Vovk.ts documentation! It's built to help you get started as quickly as possible and dosn't contain
-        phislisophical discussions.
-        <br />
-        Before you get started I would recommend to read Next.js documentation for{' '}
+        Welcome to Vovk.ts documentation! In case of typos and mistakes, feel free to submit a pull request to this{' '}
+        <a href="https://github.com/finom/docs.vovk.dev" target="_blank">documentation repository</a>.
+      </p>
+      <p style={{ textAlign: 'center', maxWidth: '600px', margin: '10px auto' }}>
+        Before you get started it's recommended to read Next.js documentation for{' '}
         <a href="https://nextjs.org/docs/app" target="_blank">
           App&nbsp;Router
         </a>{' '}
@@ -67,10 +52,18 @@ function Content() {
         <a href="https://vovk.dev" target="_blank">
           Website
         </a>
-        &nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <a href="https://github.com/finom/vovk" target="_blank">
           Github
         </a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="https://vovk-examples.vercel.app/" target="_blank">
+          Examples
+        </a>
+      </p>
+
+      <p style={{ textAlign: 'center',  margin: '10px auto', opacity: 0.3 }}>
+        Built with Docusaurus
       </p>
     </>
   );

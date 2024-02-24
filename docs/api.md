@@ -59,7 +59,7 @@ import {
 
 ### `initVovk`
 
-Generates standard Next.js App Route handlers. Accepts the following options:
+Creates the standard Next.js App Route handlers used by the main [Optional Catch-all Segment](https://nextjs.org/docs/pages/building-your-application/routing/dynamic-routes#optional-catch-all-segments). The function accepts the following options:
 
 - `controllers: Record<string, Function>` - the list of Controllers
 - `workers?: Record<string, Function>` - the list of Worker Services
@@ -80,7 +80,7 @@ const workers = { HelloWorker, UserWorker };
 export type Controllers = typeof controllers;
 export type Workers = typeof workers;
 
-export const { GET, POST, PUT, DELETE } = initVovk({
+export const { GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS } = initVovk({
   controllers,
   workers,
   exposeValidation: false,
@@ -92,7 +92,7 @@ export const { GET, POST, PUT, DELETE } = initVovk({
 
 ### `createDecorator`
 
-Defines a custom decorator to extend default behavoir of endpoints. Accepts 2 arguments: middleware function and init function. The first one defines what the decorator is going to do, the second one is called once per initialisation and intended to pass extra data to the metadata file (for now it's client validation, if exposed).
+Defines a custom decorator to extend default behavoir of API endpoints. Accepts 2 arguments: middleware function and init function. The first one defines what the decorator is going to do, the second one is called once per initialisation and intended to pass extra data to the metadata file (for now it's client validation, if exposed).
 
 The middleware accepts at least 2 arguments: `VovkRequest`, `next` function that needs to be called and its awaited result needs to be returned after you perform required actions and `...rest` - the arguments that are going to be used by the created decorator fabric.
 
@@ -132,7 +132,7 @@ class MyController {
 
 ### `@prefix` decorator
 
-`@prefix(p: string)` decorator used to prepend a sub-path to the endpoint.
+`@prefix(p: string)` decorator used to prepend a sub-path to the endpoint. It's usage is optional.
 
 ### `@get`, `@post`, `@put`, `@patch`, `@del`, `@head`, `@options`
 
@@ -161,7 +161,7 @@ export default class HelloController {
 
 ## `worker` decorator
 
-To defines required `onmessage` handler for a worker service.
+Defines required `onmessage` handler for a [Worker Service Class](./worker).
 
 ```ts
 // /src/modules/hello/HelloWorkerService.ts
@@ -183,7 +183,7 @@ import { HttpMethod, HttpStatus, HttpException } from 'vovk';
 
 #### `HttpMethod` enum
 
-The enum has no specific purpose. It is used internally and can be used with your code to create a custom fetcher.
+Can be used with your code to create a [custom fetcher](./customization).
 
 ```ts
 export enum HttpMethod {
@@ -259,7 +259,7 @@ export enum HttpStatus {
 
 ### `HttpException` class
 
-Used to throw HTTP errors on server-side and re-throw, simulate or handle HTTP errors on client-side. The instance provides 2 properties: `statusCode` and `message`.
+Used to throw HTTP errors on server-side and re-throw, simulate and handle HTTP errors on client-side. The instance provides 2 properties: `statusCode` and `message`.
 
 Server-side:
 
@@ -337,7 +337,7 @@ export default class StreamController {
 ```
 
 
-The class also provides static property `defaultHeaders` that contains the standard headers for keep-alive connections. Since `StreamResponse` accepts standard `ResponseInit` as options argument you can override default headers by optionally using `defaultHeaders`.
+The class also provides static property `defaultHeaders` that contains the standard headers for the keep-alive connections. Since `StreamResponse` accepts standard `ResponseInit` as options argument you can override default headers and optionally use `StreamResponse.defaultHeaders`.
 
 ```ts
 const resp = new StreamResponse<Token>({
@@ -382,7 +382,7 @@ Defines format for **.vovk.json**
 
 ### `VovkErrorResponse` type
 
-(Advanced) Original shape of an object returned from the server when an error is thrown.
+Original shape of an object returned from the server when an error is thrown.
 
 ## Controller Types
 
@@ -423,11 +423,11 @@ Extracts params type from a controller method.
 
 ### `VovkReturnType` type
 
-Extracts return type from a controller method and unwraps promise.
+Extracts return type from a controller method and unwraps the promise.
 
 ### `VovkYieldtype` type
 
-Extracts yield type from a generator controller method.
+Extracts yield type from a controller method implemented as a generator.
 
 ```ts
 // /src/modules/hello/HelloState.ts
@@ -473,7 +473,7 @@ Extracts params type from a clientized controller method.
 
 ### `VovkClientReturnType` type
 
-Extracts return type from a clientized controller method and unwraps promise.
+Extracts return type from a clientized controller method and unwraps the promise.
 
 ### `VovkClientYieldType` type
 
@@ -492,13 +492,13 @@ type GeneratorYieldtype = VovkClientYieldType<typeof HelloController.generator>;
 
 ### `VovkClientOptions` type
 
-(Advanced) Type that used internally and exposed to customize the client. Please see [decorators documentation](./decorators) and [customization page](./customization).
+Type that used internally and exposed to customize the client. See [decorators documentation](./decorators).
 
 ## Misc
 
 ### `generateStaticAPI(controllers: Record<string, Function>, slug?: string)`
 
-`generateStaticAPI` is used to generate static endpoints with [generateStaticParams](https://nextjs.org/docs/app/api-reference/functions/generate-static-params) at build time instead of on-demand at request time. It can be used in a [Static Export mode](https://nextjs.org/docs/pages/building-your-application/deploying/static-exports) with the `output: 'export'` Next config setting:
+`generateStaticAPI` is used to generate static endpoints with [generateStaticParams](https://nextjs.org/docs/app/api-reference/functions/generate-static-params) at build time instead of on-demand at request time. It can be used in a [Static Export mode](https://nextjs.org/docs/pages/building-your-application/deploying/static-exports) with the `output: 'export'` Next.js config setting:
 
 
 ```ts

@@ -2,13 +2,11 @@
 sidebar_position: 2
 ---
 
-# Worker Service
+# Worker Service Class
 
-Web Worker feature provided by Vovk.ts is intended to popularise Web Worker usage in your every day coding. The standard Web Workers are awesome but they require to write additional logic by using `onmessage` handler on both sides (main thread and Woker thread) and exchange data using `postMessage`. Vovk.ts applies the same principle that is used at controllers and builds main-thread client-side library using the auto-generated **.vovk.json**. It uses built-in browser API aush as `addEventListener` and `postMessage` and does not utilise `eval` or `Function` constructor.
+Web Worker features provided by Vovk.ts is intended to popularise threading in browser. The standard Web Workers are awesome but they require to write additional logic by using `onmessage` handler on both sides (main thread and the Woker thread) and exchange data using `postMessage`. Vovk.ts applies the same principle that is used at controllers and builds main-thread client-side library using the auto-generated **.vovk.json**. It uses built-in browser API aush as `addEventListener` and `postMessage` and does not utilise `eval` function or `Function` constructor.
 
-Worker Service can be easily created from an Isomorphic Service. Reminder: Isomorphic Service is a static class that provides code that is shared between front-end and back-end. It should implement functions as static methods that don't have access to neither application state nor server-side capabilities such as database access. More information about Isomorphic Services can be found at !!!!! architecture docs.
-
-To define required `onmessage` handlers use `@worker()` decorator.
+Worker Service Class (don't confuse with [Service Workers](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers)) is created from an [Isomorphic Service Class](./project-structure) by applying `@worker()` class decorator that defines `onmessage` handler in the Web Worker scope. Isomorphic Service Class is a static class that provides code that is shared between front-end and back-end. It should implement [pure functions](https://en.wikipedia.org/wiki/Pure_function) that don't have access to neither application state nor server-side capabilities such as access to the database.
 
 ```ts
 // /src/modules/hello/HelloWorkerService.ts
@@ -25,10 +23,9 @@ export default class HelloWorkerService {
 }
 ```
 
-In a non-worker environment `@worker()` does nothing. You can import the Isomorphic Service class safely in other modules as usually (on back-end, for example).
+In a non-worker scope `@worker()` does nothing. You can import the class safely in other modules, including back-end code where it's going to be behave as a normal collection of pure functions. 
 
-To make workers information available on the main thread, you need to pass them to
-`initVovk` as `workers` option.
+To compile the worker interface, you need to pass them to `initVovk` as `workers` object option and export the type of this object as `Workers`.
 
 
 ```ts
@@ -48,7 +45,7 @@ export const { GET, POST, PUT, DELETE } = initVovk({ controllers, workers });
 ```
 
 
-Once this is done, **vovk-client** exports the main-thread Worker Service library that provides interface to invoke heavy calculations but doesn't initialise Web Worker itself. To plug-in the worker to the main-thread worker interface it needs to be initialised and passed as an argument of `use` static method.
+Once this is done, **vovk-client** is going to export the worker library that provides interface to invoke heavy calculations but doesn't initialise Web Worker itself. To initialise the Web Worker at the main-thread interface it needs to be initialised and passed as an argument of `use` static method.
 
 ```ts
 import { HelloWorker } from 'vovk-client';
@@ -56,7 +53,7 @@ import { HelloWorker } from 'vovk-client';
 HelloWorker.use(new Worker(new URL('./path/to/HelloWorker.ts', import.meta.url)));
 ```
 
-Unfortunately this bulky syntax in unavoidable and required to invoke internal Webpack loaders provided by Next.js. After it's done the Worker static methods return `Promise` to delegate heavy calculations to the parallel thread.
+This bulky syntax is required to invoke the Webpack 5+ loader used by Next.js internally. After it's done the static methods of the mapped class type return `Promise` to delegate heavy calculations to the parallel thread.
 
 ```ts
 const result = await HelloWorker.heavyCalculation(1e9);
@@ -72,7 +69,7 @@ if(typeof Worker !== 'undefined') {
 }
 ```
 
-`use` method returns the worker interface itself so as a nicer solution you can use ternary operator to make the Worker library nullish.
+`use` method returns the worker interface itself so as a nicer solution you can use ternary operator to make the Worker library to be nullish.
 
 ```ts
 import { HelloWorker } from 'vovk-client';
@@ -117,7 +114,7 @@ export default class HelloWorkerService {
 }
 ```
 
-Vovk.ts turns them both into an async generator.
+Vovk.ts turns them both into an async generators when they're imported from **vovk-client**.
 
 ```ts
 import { HelloWorker } from 'vovk-client';
@@ -133,9 +130,9 @@ for await (const number of HelloWorker.asyncGenerator()) {
 }
 ```
 
-## Making HTTP requests inside a Worker Service
+## Making HTTP requests inside a Worker Service Class
 
-Since Web Workers are run in a browser (but just in another thread) it's capable to fetch server-side data as usually.
+Since Web Workers are run in a browser (but just in another thread) it's capable to fetch server-side data as expected.
 
 ```ts
 // /src/modules/hello/HelloController.ts
@@ -168,9 +165,9 @@ export default class HelloWorker {
 }
 ```
 
-## Using Worker Service inside another Worker Service
+## Using Worker Service Class inside another Worker Service Class
 
-Workers can use other workers. The syntax remains the same and you don't need to check `Worker` existence.
+Workers can use other workers. The syntax remains the same and you don't need to check for `Worker` variable to exist.
 
 ```ts
 import { AnotherWorker } from 'vovk-client';
@@ -185,7 +182,7 @@ export default class WorkerService {
 }
 ```
 
-## Fork the Worker
+## Forking the Worker
 
 To fork the worker and create as many parallel processes as needed you can use `fork` method instead of `use`.
 
