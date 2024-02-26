@@ -27,7 +27,6 @@ The library also provides [seamless Web Worker interface](./worker) utilising th
 - 🤖 Streaming for LLM apps with disposable async generators.
 - 📄 Static API generation with [generateStaticAPI](api#generateStaticAPI)
 - ⚙️ Web Worker interface for multi-threading in browser.
+- 🏎️ Fast on client and on server.
 - 🔧 Customizable.
-- 🏎️ Fast.
-- 🕵️ Well-tested.
 - 🥰 TypeScript, TypeScript, TypeScript!
