@@ -496,9 +496,9 @@ Type that used internally and exposed to customize the client. See [decorators d
 
 ## Misc
 
-### `generateStaticAPI(controllers: Record<string, Function>, slug?: string)`
+### `generateStaticAPI`
 
-`generateStaticAPI` is used to generate static endpoints with [generateStaticParams](https://nextjs.org/docs/app/api-reference/functions/generate-static-params) at build time instead of on-demand at request time. It can be used in a [Static Export mode](https://nextjs.org/docs/pages/building-your-application/deploying/static-exports) with the `output: 'export'` Next.js config setting:
+`generateStaticAPI(controllers: Record<string, Function>, slug?: string)` is used to generate static endpoints with [generateStaticParams](https://nextjs.org/docs/app/api-reference/functions/generate-static-params) at build time instead of on-demand at request time. It can be used in a [Static Export mode](https://nextjs.org/docs/pages/building-your-application/deploying/static-exports) with the `output: 'export'` Next.js config setting:
 
 
 ```ts
