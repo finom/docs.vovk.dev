@@ -8,6 +8,7 @@ import { themes as prismThemes } from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
+  plugins: [require.resolve('docusaurus-lunr-search')],
   title: 'Vovk.ts',
   tagline: 'Structural add-on for Next.js',
   favicon: 'img/favicon.ico',

@@ -18,11 +18,13 @@ Inside the project folder run `npm run dev` and open [http://localhost:3000](htt
 
 ### 1. Create Next.js project with App Router and install Vovk.ts
 
-Follow [this instruction](https://nextjs.org/docs/getting-started/installation) to install Next.js. Use TypeScript, App Router and `src/` directory. If you're using **create-next-app** you can simply answer to all questions "Yes".
+Follow [this instruction](https://nextjs.org/docs/getting-started/installation) to install Next.js. Use TypeScript, App Router and `src/` directory.
 
 ```
 npx create-next-app
 ```
+
+Choices example:
 
 ![](https://github.com/finom/vovk/assets/1082083/b9e600da-a43a-4e30-a089-43e5e4b147ef)
 
@@ -106,7 +108,7 @@ The code above creates GET endpoint to `/api/hello/greeting`. You can also use n
 
 ## Create a React component and run `vovk dev`
 
-Once you run `npx vovk dev` that replaces the original `npx next dev` you're going to notice the new file **.vovk.json** created in the root of your project. This file contains required information to build the client and it needs to be committed. It's going to be updated automatically when your project structure is changed.
+Once you run `npx vovk dev` that replaces the original `npx next dev` you're going to notice the new file **.vovk.json** created in the root of your project. This file contains required information to build the client and it needs to be committed. It's going to be updated automatically when your project structure is changed. Open [http://localhost:3000](http://localhost:3000).
 
 Besides **.vovk.json** the command also generates client **.js** and **.ts** files inside **node_modules/.vovk** that are re-exported by **vovk-client** module to produce no errors if **vovk-client** is not installed. This approach is borrowed from Prisma ORM.
 
