@@ -6,8 +6,8 @@ import { useRef, useEffect } from 'react';
 
 function Content() {
   return (
-    <>
-      <p className={styles.main}>
+    <div className={styles.main}>
+      <p>
         <img
           width="250"
           height="345"
@@ -24,14 +24,14 @@ function Content() {
           src='/img/vovk-text-logo.svg'
         />
       </p>
-      <p style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
+      <p>
         Welcome to Vovk.ts documentation! In case of typos and mistakes, feel free to submit a pull request to this{' '}
         <a href="https://github.com/finom/docs.vovk.dev" target="_blank">documentation repository</a>.
       </p>
-      <p style={{ textAlign: 'center', maxWidth: '600px', margin: '10px auto' }}>
+      <p>
         Before you get started it's recommended to read Next.js documentation for{' '}
-        <a href="https://nextjs.org/docs/app" target="_blank">
-          App&nbsp;Router
+        <a href="https://nextjs.org/docs/app/building-your-application/routing/route-handlers" target="_blank">
+          Route&nbsp;Handlers
         </a>{' '}
         and then come back here. Enjoy!
       </p>
@@ -65,7 +65,7 @@ function Content() {
       <p style={{ textAlign: 'center',  margin: '10px auto', opacity: 0.3 }}>
         Built with Docusaurus
       </p>
-    </>
+    </div>
   );
 }
 
