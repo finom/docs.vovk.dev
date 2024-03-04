@@ -110,6 +110,8 @@ The code above creates GET endpoint to `/api/hello/greeting`. You can also use n
 
 Once you run `npx vovk dev` that replaces the original `npx next dev` you're going to notice the new file **.vovk.json** created in the root of your project. This file contains required information to build the client and it needs to be committed. It's going to be updated automatically when your project structure is changed. Open [http://localhost:3000](http://localhost:3000).
 
+Alternatively, you can use [concurrently](https://www.npmjs.com/package/concurrently) to avoid using the wrapper. Use `--no-next-dev` in order to avoid running `next dev` internally and provide port variables explicitly: `PORT=3000 VOVK_PORT=6969 concurrently 'vovk dev --no-next-dev' 'next dev' --kill-others`.
+
 Besides **.vovk.json** the command also generates client **.js** and **.ts** files inside **node_modules/.vovk** that are re-exported by **vovk-client** module to produce no errors if **vovk-client** is not installed. This approach is borrowed from Prisma ORM.
 
 Now the client is generated you can safaly import your client library from **vovk-client**.
