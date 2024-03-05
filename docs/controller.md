@@ -27,7 +27,7 @@ export default class UserController {
 
 At the example aboce `data` is casted as `any` and `userRole` is casted as `string | null`. To fix the body and query types Vovk.ts provides a new type `VovkRequest<BODY?, QUERY?>` that is extended from `NextRequest` where the first generic argument represents the type of value returned from `req.json` but also allows to define values returned from `req.nextUrl.searchParams.get`. `VovkRequest` also plays a crucial role in type inference when **vovk-client** is used. 
 
-As its mentioned before, `req` object is an original `NextRequest` object that provided by Next.js as is without changing it, but other libraries (like [vovk-zod](https://github.com/finom/vovk-zod)) as well as your custom code can modify this object when needed (for example to add `currentUser` property defined by your [auth guard decorator](http://localhost:3000/docs/decorators)).
+As its mentioned before, `req` object is an original `NextRequest` object that provided by Next.js as is without changing it, but other libraries (like [vovk-zod](https://github.com/finom/vovk-zod)) as well as your custom code can modify this object when needed (for example to add `currentUser` property defined by your [auth guard decorator](./decorators)).
 
 To add the required body and query types just replace `NextRequest` by `VovkRequest`. Let's modify the abstract example above.
 
@@ -268,7 +268,7 @@ throw { hello: 'World' };
 
 ## Service Class
 
-In order to make the code cleaner it's recommended to move most of the logic to Back-end Services. [Back-End Service](http://localhost:3000/docs/project-structure) is a static class that serves as a library that performs database and third-party API calls outside of Controller Classes.
+In order to make the code cleaner it's recommended to move most of the logic to Back-end Services. [Back-End Service](./project-structure) is a static class that serves as a library that performs database and third-party API calls outside of Controller Classes.
 
 Let's say you have the following Controller Class:
 
