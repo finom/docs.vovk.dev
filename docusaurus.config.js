@@ -84,11 +84,11 @@ const config = {
             label: 'API Reference',
             position: 'left',
           },
-          {
+          /* {
             href: 'https://discord.gg/fQWk2rh8',
             label: 'Discord',
             position: 'right',
-          },
+          }, */
           {
             href: 'https://github.com/finom/vovk',
             label: 'GitHub',
