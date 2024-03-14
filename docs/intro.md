@@ -114,7 +114,7 @@ Alternatively, you can use [concurrently](https://www.npmjs.com/package/concurre
 
 Besides **.vovk.json** the command also generates client **.js** and **.ts** files inside **node_modules/.vovk** that are re-exported by **vovk-client** module to produce no errors if **vovk-client** is not installed. This approach is borrowed from Prisma ORM.
 
-Now the client is generated you can safaly import your client library from **vovk-client**.
+Now the client is generated you can safely import your client library from **vovk-client**.
 
 ```tsx
 'use client';
@@ -143,7 +143,29 @@ export default function MyComponent() {
 
 Note that if you're using VSCode you're probably going to need to [restart TS server](https://stackoverflow.com/questions/64454845/where-is-vscodes-restart-ts-server) each time when you add a new controller or worker service to your app because by the time being TS Server doesn't update types imported from **node_modules** automatically when they were changed. This is a well-known problem that bothers Prisma ORM developers for long time. In all other scenarios (when you add a new method, change body type, etc) you don't need to do that since TS server reads `Controllers` and `Workers` that you export from **/src/app/api/[[...vovk]]/route.ts**.
 
-Note that Next.js Server Components are also supported but require to define absolute URL (by default all requests are made to `/api`). Check the [Server Component Example](https://vovk-examples.vercel.app/server-component) for more information.
+Next.js Server Components are also supported but require to define absolute URL (by default all requests are made to `/api`). Check the [Server Component Example](https://vovk-examples.vercel.app/server-component) for more information.
+
+Methods of the generated library have approximately the following signature:
+
+```ts
+interface Options extends Omit<RequestInit, 'body' | 'method'> {
+  reactNative?: { textStreaming: boolean };
+  prefix?: string;
+  disableClientValidation?: boolean;
+  body: VovkClientBody<typeof Controller.method>
+  params: VovkClientParams<typeof Controller.method>
+  query: VovkClientQuery<typeof Controller.method>
+}
+```
+
+In other words it supports [custom Next.js options](https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating) (Because Next.js extends `RequestInit` global type) as well as [React Native Fetch API](https://www.npmjs.com/package/react-native-fetch-api).
+
+```ts
+await HelloController.hello({
+  body: { foo: 'bar' },
+  next: { revalidate: 3600 },
+});
+```
 
 ## Build and deploy
 
