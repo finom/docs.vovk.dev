@@ -87,7 +87,7 @@ The fetcher accepts two arguments:
     - `query` - the search query properties such as `?foo=bar`;
     - `body` - the request body;
     - `prefix` - what's defined as `prefix` property at **vovk.config.js** or passed directly to the client method;
-    - The rest options - your custom options and `RequestInit` that includes the rest `fetch` options such as `headers`, `credentials` etc.
+    - The rest options - your custom options and `RequestInit` (including [custom Next.js options](https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating)) that includes the rest `fetch` options such as `headers`, `credentials` etc.
 
 Your custom fetcher with a custom option `successMessage` may look like that:
 
