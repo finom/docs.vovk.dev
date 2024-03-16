@@ -66,7 +66,7 @@ export default function Home() {
   return (
     <Layout
       title={`Vovk.ts Documentation`}
-      description="Welcome to Vovk.ts documentation! It's built to help you get started as quickly as possible and contain phislisophical discussions."
+      description="Transforms Next.js into a powerful and extensible REST API platform. Made with TypeScript, inspired by NestJS."
     >
       <header className={styles.header}>
         <Content />
