@@ -11,6 +11,7 @@ function Content() {
         <img
           width="250"
           alt="vovk"
+          className='invert'
           src="https://vovk.dev/vovk-logo.svg"
         />{' '}
       </p>
