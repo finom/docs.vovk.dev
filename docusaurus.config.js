@@ -64,14 +64,14 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       // Replace with your project's social card
-      image: 'img/vovk-og.png',
+      // image: 'img/vovk-og.png',
       navbar: {
         // title: 'Vovk.ts',
         logo: {
           alt: 'Vovk.ts',
           className: 'invert',
-          style: { height: '20px', marginTop: '5px' },
-          src: '/img/vovk-text-logo.svg',
+          style: { height: '27px' },
+          src: 'https://vovk.dev/vovk-logo.svg',
         },
         items: [
           {
@@ -140,8 +140,8 @@ const config = {
         copyright: `Built with Docusaurus.`,
       },
       prism: {
-        theme: prismThemes.github,
-        darkTheme: prismThemes.dracula,
+        theme: prismThemes.nightOwl,
+        darkTheme: prismThemes.nightOwl,
       },
     }),
 };

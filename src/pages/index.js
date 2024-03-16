@@ -10,22 +10,12 @@ function Content() {
       <p>
         <img
           width="250"
-          height="345"
           alt="vovk"
-          src="https://github.com/finom/vovk/assets/1082083/86bfbbbb-3600-435b-a74c-c07bd0c4af4b"
+          src="https://vovk.dev/vovk-logo.svg"
         />{' '}
-        <br />
-        <img
-          width="350"
-          height="72"
-          alt="vovk"
-          className="invert"
-          // style={colorMode === 'dark' ? { filter: 'invert(1)' } : {}}
-          src='/img/vovk-text-logo.svg'
-        />
       </p>
       <p>
-        Welcome to Vovk.ts documentation! In case of typos and mistakes, feel free to submit a pull request to this{' '}
+        Welcome to Vovk.ts documentation! In case of typos and inaccuracies, feel free to submit a direct pull request to this{' '}
         <a href="https://github.com/finom/docs.vovk.dev" target="_blank">documentation repository</a>.
       </p>
       <p>
@@ -35,8 +25,8 @@ function Content() {
         </a>{' '}
         and then come back here. Enjoy!
       </p>
-      <p className={styles.buttons}>
-        <a className={styles.button} href="/docs/intro">
+      <p>
+        <a href="/docs/intro">
           <span>Getting Started</span>{' '}
           <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -62,8 +52,11 @@ function Content() {
         </a>
       </p>
 
-      <p style={{ textAlign: 'center',  margin: '10px auto', opacity: 0.3 }}>
-        Built with Docusaurus
+      <p style={{ textAlign: 'center',  margin: '50px auto' }}>
+        Built with{' '}
+        <a href="https://docusaurus.io/" target="_blank">
+          Docusaurus
+        </a>
       </p>
     </div>
   );
