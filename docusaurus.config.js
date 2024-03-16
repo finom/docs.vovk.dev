@@ -64,7 +64,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       // Replace with your project's social card
-      // image: 'img/vovk-og.png',
+      image: 'https://vovk.dev/vovk-logo.png',
       navbar: {
         // title: 'Vovk.ts',
         logo: {
