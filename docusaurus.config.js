@@ -9,6 +9,21 @@ import { themes as prismThemes } from 'prism-react-renderer';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   // plugins: [require.resolve('docusaurus-lunr-search')],
+  plugins: [
+    [
+      require.resolve("docusaurus-plugin-search-local"),
+      {
+        // ... Your options.
+        // `hashed` is recommended as long-term-cache of index file is possible.
+        hashed: true,
+        // For Docs using Chinese, The `language` is recommended to set to:
+        // ```
+        // language: ["en", "zh"],
+        // ```
+        // When applying `zh` in language, please install `nodejieba` in your project.
+      },
+    ],
+  ],
   title: 'Vovk.ts',
   tagline: 'Structural add-on for Next.js',
   favicon: 'img/favicon.ico',
@@ -143,7 +158,7 @@ const config = {
         theme: prismThemes.nightOwl,
         darkTheme: prismThemes.dracula,
       },
-      algolia: {
+      __algolia: {
         // The application ID provided by Algolia
         appId: 'BR2W6LNZLW',
   
