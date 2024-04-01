@@ -154,6 +154,8 @@ const config = {
   
         // Optional: see doc section below
         contextualSearch: false,
+
+        ignoreCanonicalTo: true,
   
         // Optional: Specify domains where the navigation should occur through window.location instead on history.push. Useful when our Algolia config crawls multiple documentation sites and we want to navigate with window.location.href to them.
         // externalUrlRegex: 'external\\.com|domain\\.com',
@@ -171,14 +173,6 @@ const config = {
         searchPagePath: 'search',
   
         //... other Algolia params
-
-        attributesForFaceting: [
-          'type',
-          'lang',
-          'language',
-          'version',
-          'docusaurus_tag',
-        ],
       },
     }),
 };
