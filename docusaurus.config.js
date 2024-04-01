@@ -171,6 +171,14 @@ const config = {
         searchPagePath: 'search',
   
         //... other Algolia params
+
+        attributesForFaceting: [
+          'type',
+          'lang',
+          'language',
+          'version',
+          'docusaurus_tag',
+        ],
       },
     }),
 };
