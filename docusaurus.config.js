@@ -153,7 +153,7 @@ const config = {
         indexName: 'vovk',
   
         // Optional: see doc section below
-        contextualSearch: false,
+        contextualSearch: true,
 
         ignoreCanonicalTo: true,
   
