@@ -89,16 +89,6 @@ const config = {
           src: 'https://vovk.dev/vovk-logo.svg',
         },
         items: [
-          {
-            href: '/docs/intro',
-            position: 'left',
-            label: 'Getting Started',
-          },
-          {
-            href: '/docs/api',
-            label: 'API Reference',
-            position: 'left',
-          },
           /* {
             href: 'https://discord.gg/fQWk2rh8',
             label: 'Discord',
