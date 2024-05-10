@@ -7,8 +7,8 @@ import { useRef, useEffect } from 'react';
 function Content() {
   return (
     <div className={styles.main}>
-      <h1>❗ The documentation has been moved to <a href='https://vovk.dev/'>vovk.dev ❗</a>
-
+      <h1>❗ The documentation has been moved to <a href='https://vovk.dev/'>vovk.dev</a>
+      ❗
       </h1>
       <br />
       <br />
